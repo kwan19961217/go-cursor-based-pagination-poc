@@ -5,16 +5,30 @@ This demonstration will be paginated on the `User` model by `created_at`, and us
 
 ## Setup
 
+You will need to setup your mock data for the demo to work.
+
 The `User` model is defined as follow.
 
-| User       |            |
-| ---------- | ---------- |
-| id         | Unique Key |
-| created_at | Timestamp  |
+| Field      | Description |
+| ---------- | ----------- |
+| id         | Unique Key  |
+| created_at | Timestamp   |
+
+### MongoDB
 
 You will need to setup a MongoDB in your local environment.
 
-Or alternatively, comment out the following lines in `cmd/httpserver/main.go`
+| Setting    | Value |
+| ---------- | ----- |
+| Port       | 27017 |
+| Database   | dev   |
+| Collection | users |
+
+Setup your mock data according to the above `User` model.
+
+### In-Memory
+
+Alternatively, comment out the following lines in `cmd/httpserver/main.go`
 
 ```
 	mongoClient, err := mongo.Connect(options.Client().ApplyURI("mongodb://localhost:27017"))
@@ -31,9 +45,7 @@ And uncomment the following
 //userStore := user.NewInMemoryUserRepository()
 ```
 
-to use a in-memory storage.
-
-Setup your mock data according to your storage option, you can find the mock data for in-memory storage in `internal/domain/user/repository.go`
+You can find the mock data for in-memory storage in `internal/domain/user/repository.go`
 
 ## Usage
 
