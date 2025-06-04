@@ -3,8 +3,8 @@ package user
 import "time"
 
 type User struct {
-	ID        string    `bson:"_id"`
-	CreatedAt time.Time `bson:"created_at"`
+	ID        string    `bson:"_id" json:"id"`
+	CreatedAt time.Time `bson:"created_at" json:"created_at"`
 }
 
 type UserList struct {
