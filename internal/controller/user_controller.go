@@ -17,6 +17,8 @@ func NewUserController(userService *user.UserService) *UserController {
 }
 
 func (c *UserController) ListUsers(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	queryParams := r.URL.Query()
 	nextCursor := queryParams.Get("next_cursor")
 	start := queryParams.Get("start")
