@@ -60,6 +60,7 @@ func (r *InMemoryUserRepository) ListUsers(start time.Time, end time.Time, order
 	filteredUsers := lo.Filter(r.users, func(user User, _ int) bool {
 		skipUser := false
 		if lastUserId != "" {
+			// for handling the case when the last request's last user has the same createdAt as the current request's first user
 			if order == "asc" && user.CreatedAt.Equal(start) {
 				skipUser = user.ID <= lastUserId
 			} else if order == "desc" && user.CreatedAt.Equal(end) {
@@ -105,8 +106,22 @@ func (r *MongoUserRepository) ListUsers(start time.Time, end time.Time, order st
 			if err != nil {
 				return []User{}
 			}
-			filter["_id"] = bson.M{
-				"$gt": objectId,
+			filter = bson.M{
+				"$or": bson.A{
+					// for handling the case when the last request's last user has the same createdAt as the current request's first user
+					bson.M{
+						"_id": bson.M{
+							"$gt": objectId,
+						},
+						"created_at": start,
+					},
+					bson.M{
+						"created_at": bson.M{
+							"$gt":  start,
+							"$lte": end,
+						},
+					},
+				},
 			}
 		}
 	} else {
@@ -119,8 +134,22 @@ func (r *MongoUserRepository) ListUsers(start time.Time, end time.Time, order st
 			if err != nil {
 				return []User{}
 			}
-			filter["_id"] = bson.M{
-				"$lt": objectId,
+			filter = bson.M{
+				"$or": bson.A{
+					// for handling the case when the last request's last user has the same createdAt as the current request's first user
+					bson.M{
+						"_id": bson.M{
+							"$lt": objectId,
+						},
+						"created_at": end,
+					},
+					bson.M{
+						"created_at": bson.M{
+							"$gte": start,
+							"$lt":  end,
+						},
+					},
+				},
 			}
 		}
 	}

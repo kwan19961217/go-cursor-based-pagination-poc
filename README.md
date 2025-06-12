@@ -14,6 +14,8 @@ The `User` model is defined as follow.
 | id         | Unique Key  |
 | created_at | Timestamp   |
 
+There are two storage options.
+
 ### MongoDB
 
 You will need to setup a MongoDB in your local environment.
