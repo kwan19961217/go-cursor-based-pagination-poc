@@ -21,6 +21,12 @@ func (s *UserService) ListUsers(start time.Time, end time.Time, order string, us
 		return &UserList{Users: users, NextCursor: ""}, nil
 	}
 
+	if order == "asc" {
+		start = users[len(users)-1].CreatedAt
+	} else {
+		end = users[len(users)-1].CreatedAt
+	}
+
 	b, err := json.Marshal(map[string]any{
 		"start":   start,
 		"end":     end,

@@ -40,7 +40,7 @@ func NewInMemoryUserRepository() UserRepository {
 	return &InMemoryUserRepository{
 		users: []User{
 			{ID: "1", CreatedAt: time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)},
-			{ID: "2", CreatedAt: time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)},
+			{ID: "2", CreatedAt: time.Date(2025, 1, 2, 0, 0, 0, 0, time.UTC)},
 			{ID: "3", CreatedAt: time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)},
 			{ID: "4", CreatedAt: time.Date(2025, 1, 3, 0, 0, 0, 0, time.UTC)},
 			{ID: "5", CreatedAt: time.Date(2025, 1, 4, 0, 0, 0, 0, time.UTC)},
@@ -60,9 +60,9 @@ func (r *InMemoryUserRepository) ListUsers(start time.Time, end time.Time, order
 	filteredUsers := lo.Filter(r.users, func(user User, _ int) bool {
 		skipUser := false
 		if lastUserId != "" {
-			if order == "asc" {
+			if order == "asc" && user.CreatedAt.Equal(start) {
 				skipUser = user.ID <= lastUserId
-			} else {
+			} else if order == "desc" && user.CreatedAt.Equal(end) {
 				skipUser = user.ID >= lastUserId
 			}
 		}
